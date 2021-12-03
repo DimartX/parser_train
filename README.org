@@ -8,11 +8,14 @@
 ** Как пользоваться
 1. Клонируем эту репу
 #+begin_src bash
-  git clone <address>
+  git clone https://github.com/DimartX/parser_train.git
 #+end_src
 
 2. Качаем таблицу в виде html-страницы в скачанную репу
+#+CAPTION: Вот так сохранять!
+#+NAME:   fig:SED-HR4049
    [[./save_html_table.png]]
+
 3. Тюним с помощью любимого текстового редактора значения в файле [[run_parser.sh]]
 4. Указываем в [[parser_calculate.py]] пачкой ифов кому сколько баллов за опенкапы
 5. Пишем вот это
