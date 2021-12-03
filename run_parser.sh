@@ -8,7 +8,7 @@ NUMBER_OF_FINAL_CONTEST=12
 COEFFICIENT=0.019354
 
 echo "Parsing result table..."
-./parser_calculate.py --name $INPUT_NAME --solved-cost=$SOLVED_COST --upsolved_cost=$UPSOLVED_COST --final-cost=$FINAL_COST --final-contest=$NUMBER_OF_FINAL_CONTEST --coefficient=$COEFFICIENT > table.csv
+./parser_calculate.py --name $INPUT_NAME --solved-cost=$SOLVED_COST --upsolved-cost=$UPSOLVED_COST --final-cost=$FINAL_COST --final-contest=$NUMBER_OF_FINAL_CONTEST --coefficient=$COEFFICIENT > table.csv
 echo "Parsing as original table..."
 ./parser_html_to_csv.py --name $INPUT_NAME > sub_table.csv
 echo "Pasting original table in right of result table"
