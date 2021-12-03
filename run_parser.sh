@@ -6,6 +6,9 @@ UPSOLVED_COST=0.3
 FINAL_COST=2.0
 NUMBER_OF_FINAL_CONTEST=12
 COEFFICIENT=0.019354
+# Как считать коэффициент? Из выражения:
+# MAX_POINTS * COEFFICIENT = MAX_GRADE
+# MAX_GRADE будет 1.0 или 1.5
 
 echo "Parsing result table..."
 ./parser_calculate.py --name $INPUT_NAME --solved-cost=$SOLVED_COST --upsolved-cost=$UPSOLVED_COST --final-cost=$FINAL_COST --final-contest=$NUMBER_OF_FINAL_CONTEST --coefficient=$COEFFICIENT > table.csv
