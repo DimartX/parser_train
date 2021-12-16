@@ -3,7 +3,11 @@ from bs4 import *
 import bs4
 import argparse
 
-coefficient = 2.0 / (103 + 1 / 3)
+def points_to_string(points, digits):
+    if (points == 0):
+        return ''
+    else:
+        return f'{points:.{digits}f}'
 
 def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coefficient):
     name = human.td.next_sibling.next_sibling
@@ -50,26 +54,33 @@ def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coe
     cnt_tasks = final + solved + upsolved # сколько всего решено
     points = final * final_cost + solved * solved_cost + upsolved * upsolved_cost
 
+    # Ничего не решил(
+    if (solved == 0 and upsolved == 0):
+        return 1
+
     opencup = 0
     # Здесь можно навалить ифов типо
-    # if name.text.strip() == "Белоусов Егор Владимирович 105":
-    #     opencup = 20
+    # if name.text.strip() == "Иванов Иван Иванович М8О-119Б-99":
+    #     opencup = 3
 
     points += opencup
 
+    additional = 0
+    # Здесь тоже можно навалить ифов типо
+    # if name.text.strip() == "Иванов Иван Иванович М8О-119Б-99":
+    #     additional = 3
+
+    points += additional
+
     # базовая информация, без опенкапов
-    str_points = f'{points:.{1}f}' # округление до одного знака
+    str_points = points_to_string(points, 1) # округление до одного знака
     print(name.text.strip(), str_points, solved, upsolved, final, cnt_tasks, sep = ',', end = ',')
 
-    # по опенкапам + итоговый балл на экзамен
-    str_result = f'{points * coefficient:.{6}f}'
-    if opencup:
-        print(f'{opencup:.{1}f}', str_result, "", sep = ',')
-    else:
-        print('', str_result, "", sep = ',')
-
-    if (solved == 0 and upsolved == 0):
-        return 1
+    # по опенкапам + доп + итоговый балл на экзамен
+    str_opencup = points_to_string(opencup, 1)
+    str_additional = points_to_string(additional, 2)
+    str_result = points_to_string(points * coefficient, 6)
+    print(str_opencup, str_additional, str_result, "", sep = ',')
 
     return 0
 
@@ -93,7 +104,8 @@ def main():
           "Дорешено {}".format(args.upsolved_cost),
           "Реш. финал {}".format(args.final_cost),
           "Всего задач",
-          "Опенкапы,,", sep = ',')
+          "Опенкапы",
+          "Доп,,", sep = ',')
 
     with open(args.name, "r") as page:
         contents = page.read()
