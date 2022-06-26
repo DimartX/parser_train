@@ -3,6 +3,14 @@ from bs4 import *
 import bs4
 import argparse
 
+def get_not_passed():
+    res = set()
+    with open("interview_not_passed.txt", "r") as not_passed:
+        names = not_passed.read().split("\n")
+        for name in names:
+            res.add(name)
+    return res
+
 def points_to_string(points, digits):
     if (points == 0):
         return ''
@@ -15,6 +23,8 @@ def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coe
     final = 0
     solved = 0
     upsolved = 0
+
+    not_passed_interview = get_not_passed()
 
     tasks = name.next_sibling.next_sibling
 
@@ -42,6 +52,13 @@ def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coe
             upsolved += 1
     lst_contests.append((solved, upsolved, final))
 
+    cnt_visited = 0
+    for elem in lst_contests:
+        for item in elem:
+            if (item > 0):
+                cnt_visited += 1
+                break
+
     final = 0
     solved = 0
     upsolved = 0
@@ -51,8 +68,12 @@ def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coe
         upsolved += contest[1]
         final += contest[2]
 
+    personal_coef = 1.0
+    if (name.text.strip() in not_passed_interview):
+        personal_coef = 0.35
+
     cnt_tasks = final + solved + upsolved # сколько всего решено
-    points = final * final_cost + solved * solved_cost + upsolved * upsolved_cost
+    points = personal_coef * (final * final_cost + solved * solved_cost) + upsolved * upsolved_cost
 
     # Ничего не решил(
     if (solved == 0 and upsolved == 0):
@@ -74,13 +95,13 @@ def print_info(human, solved_cost, upsolved_cost, final_cost, final_contest, coe
 
     # базовая информация, без опенкапов
     str_points = points_to_string(points, 1) # округление до одного знака
-    print(name.text.strip(), str_points, solved, upsolved, final, cnt_tasks, sep = ',', end = ',')
+    print(name.text.strip(), str_points, solved, upsolved, final, cnt_tasks, personal_coef, sep = ',', end = ',')
 
-    # по опенкапам + доп + итоговый балл на экзамен
+    # посещения, опенкапы + доп + итоговый балл на экзамен
     str_opencup = points_to_string(opencup, 1)
     str_additional = points_to_string(additional, 2)
     str_result = points_to_string(points * coefficient, 6)
-    print(str_opencup, str_additional, str_result, "", sep = ',')
+    print(cnt_visited, str_opencup, str_additional, str_result, "", sep = ',')
 
     return 0
 
@@ -97,15 +118,19 @@ def parse_args():
 def main():
     args = parse_args()
 
-    print(",,,,,,,,,")
+    print(",,,,,,,,,,,")
     print("ФИО",
-          "Баллы",
+          "Балл",
           "Решено {}".format(args.solved_cost),
           "Дорешено {}".format(args.upsolved_cost),
           "Реш. финал {}".format(args.final_cost),
           "Всего задач",
+          "Собес",
+          "Посещ",
           "Опенкапы",
-          "Доп,,", sep = ',')
+          "Доп",
+          "Итог"
+          "", sep = ',')
 
     with open(args.name, "r") as page:
         contents = page.read()

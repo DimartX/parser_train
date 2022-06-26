@@ -11,7 +11,7 @@ def print_info(human):
     for task in tasks.next_siblings:
         if task is None or type(task) is bs4.element.NavigableString:
             continue
-        
+
         if task["class"][0] == "_OverallCustomRatingFrame_delimiter":
             continue
 
@@ -44,7 +44,7 @@ def main():
         for contest in head.children:
             if contest is None or type(contest) is not bs4.element.Tag or contest.text.strip() == "":
                 continue
-            print(contest.text.strip(), end = ',')
+            print(contest.text.strip().replace(',', ''), end = ',')
 
             i += 1
             if i < 3:
@@ -58,8 +58,8 @@ def main():
                     task = task.next_sibling
                     break
                 print(end = ",")
-                
-                
+
+
         print()
 
         head_bottom = head.next_sibling.next_sibling
@@ -70,7 +70,7 @@ def main():
             print(task.text.strip(), end = ',')
         print()
 
-        
+
         table = soup.tbody
 
         for human in table.children:
@@ -78,7 +78,7 @@ def main():
                 continue
 
             print_info(human)
-                
+
 
 if __name__ == "__main__":
     main()
